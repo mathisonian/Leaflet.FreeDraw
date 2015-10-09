@@ -1,17 +1,10 @@
-(function($window, L, d3, ClipperLib) {
+"use strict";
 
-    "use strict";
+var ClipperLib = require('evispa-timo-jsclipper');
 
-    /**
-     * @method freeDraw
-     * @param options {Object}
-     * @return {window.L.FreeDraw}
-     */
-    L.freeDraw = function freeDraw(options) {
-        return new L.FreeDraw(options);
-    };
-
-    L.FreeDraw = L.FeatureGroup.extend({
+module.exports = function(L, d3) {
+        
+    var FreeDraw = L.FeatureGroup.extend({
 
         /**
          * @property map
@@ -172,14 +165,14 @@
             if (typeof d3 === 'undefined') {
 
                 // Ensure D3 has been included.
-                L.FreeDraw.Throw('D3 is a required library', 'http://d3js.org/');
+                FreeDraw.Throw('D3 is a required library', 'http://d3js.org/');
 
             }
 
             if (typeof ClipperLib === 'undefined') {
 
                 // Ensure JSClipper has been included.
-                L.FreeDraw.Throw('JSClipper is a required library', 'http://sourceforge.net/p/jsclipper/wiki/Home%206/');
+                FreeDraw.Throw('JSClipper is a required library', 'http://sourceforge.net/p/jsclipper/wiki/Home%206/');
 
             }
 
@@ -192,15 +185,15 @@
 
             options = options || {};
 
-            this.memory  = new L.FreeDraw.Memory();
-            this.options = new L.FreeDraw.Options();
-            this.hull    = new L.FreeDraw.Hull();
+            this.memory  = new FreeDraw.Memory();
+            this.options = new FreeDraw.Options();
+            this.hull    = new FreeDraw.Hull();
             this.element = options.element || null;
 
             this.setMode(options.mode || this.mode);
             this.options.setPathClipperPadding(100);
 
-            L.FreeDraw.Polygon = L.Polygon.extend({
+            FreeDraw.Polygon = L.Polygon.extend({
                 options: {
                     className: "leaflet-freedraw-polygon"
                 }
@@ -296,7 +289,7 @@
 
             // Lazily hook up the options and hull objects.
             this.map  = map;
-            this.mode = this.mode || L.FreeDraw.MODES.VIEW;
+            this.mode = this.mode || FreeDraw.MODES.VIEW;
 
             // Memorise the preferences so we know how to revert.
             this.defaultPreferences = {
@@ -439,7 +432,7 @@
         setMode: function setMode(mode) {
 
             // Prevent the mode from ever being defined as zero.
-            mode = (mode === 0) ? L.FreeDraw.MODES.VIEW : mode;
+            mode = (mode === 0) ? FreeDraw.MODES.VIEW : mode;
 
             // Set the current mode and emit the event.
             this.mode = mode;
@@ -452,11 +445,11 @@
             }
 
             // Enable or disable dragging according to the current mode.
-            var isCreate = !!(mode & L.FreeDraw.MODES.CREATE),
+            var isCreate = !!(mode & FreeDraw.MODES.CREATE),
                 method = !isCreate ? 'enable' : 'disable';
             this.map.dragging[method]();
 
-            if (this.boundaryUpdateRequired && !(this.mode & L.FreeDraw.MODES.EDIT)) {
+            if (this.boundaryUpdateRequired && !(this.mode & FreeDraw.MODES.EDIT)) {
 
                 // Share the boundaries if there's an update available and the user is changing the mode
                 // to anything else but the edit mode again.
@@ -504,7 +497,7 @@
                     addClass(map, 'mode-append');
                 }
 
-            }(L.FreeDraw.MODES, this.map._container, L.DomUtil.addClass, L.DomUtil.removeClass));
+            }(FreeDraw.MODES, this.map._container, L.DomUtil.addClass, L.DomUtil.removeClass));
 
         },
 
@@ -679,7 +672,7 @@
              */
             var updatePolygon = function updatePolygon() {
 
-                if (!(this.mode & L.FreeDraw.MODES.APPEND)) {
+                if (!(this.mode & FreeDraw.MODES.APPEND)) {
 
                     // User hasn't enabled the append mode.
                     return;
@@ -697,7 +690,7 @@
 
             // If the user hasn't enabled delete mode but has the append mode active, then we'll
             // assume they're always wanting to add an edge.
-            if (this.mode & L.FreeDraw.MODES.APPEND && !(this.mode & L.FreeDraw.MODES.DELETE)) {
+            if (this.mode & FreeDraw.MODES.APPEND && !(this.mode & FreeDraw.MODES.DELETE)) {
 
                 // Mode has been set to only add new elbows when the user clicks the polygon close
                 // to the boundaries as defined by the `setMaximumDistanceForElbow` method.
@@ -711,13 +704,13 @@
             }
 
             // If the inverse of the aforementioned is true then we'll always delete the polygon.
-            if (this.mode & L.FreeDraw.MODES.DELETE && !(this.mode & L.FreeDraw.MODES.APPEND)) {
+            if (this.mode & FreeDraw.MODES.DELETE && !(this.mode & FreeDraw.MODES.APPEND)) {
                 this.destroyPolygon(polygon);
                 return;
             }
 
             // Otherwise we'll use some logic to detect whether we should delete or add a new elbow.
-            if (lowestDistance > INNER_DISTANCE && this.mode & L.FreeDraw.MODES.DELETE) {
+            if (lowestDistance > INNER_DISTANCE && this.mode & FreeDraw.MODES.DELETE) {
 
                 // Delete the polygon!
                 this.destroyPolygon(polygon);
@@ -781,7 +774,7 @@
             }
 
             var className = this.options.polygonClassName,
-                polygon   = new L.FreeDraw.Polygon(latLngs, {
+                polygon   = new FreeDraw.Polygon(latLngs, {
                 smoothFactor: this.options.smoothFactor,
                 className: Array.isArray(className) ? className[this.polygons.length] : className
             });
@@ -924,7 +917,7 @@
 
                         // Ensure we're dealing with a <g> node that was created by FreeDraw (...an SVG group element).
                         if (polygon._container && polygon._container.tagName.toUpperCase() === GROUP_TAG) {
-                            if (polygon instanceof L.FreeDraw.Polygon) {
+                            if (polygon instanceof FreeDraw.Polygon) {
                                 polygons.push(polygon);
                             }
                         }
@@ -938,7 +931,7 @@
                 this.edges.forEach(function forEach(edge) {
 
                     if (polygons.indexOf(edge._freedraw.polygon) === -1) {
-                        if (edge._freedraw.polygon instanceof L.FreeDraw.Polygon) {
+                        if (edge._freedraw.polygon instanceof FreeDraw.Polygon) {
                             polygons.push(edge._freedraw.polygon);
                         }
                     }
@@ -1028,7 +1021,7 @@
             if (this.options.deleteExitMode && !this.silenced) {
 
                 // Automatically exit the user from the deletion mode.
-                this.setMode(this.mode ^ L.FreeDraw.MODES.DELETE);
+                this.setMode(this.mode ^ FreeDraw.MODES.DELETE);
 
             }
 
@@ -1368,7 +1361,7 @@
                     this.latLngs   = [];
                     this.fromPoint = this.map.latLngToContainerPoint(event.latlng);
 
-                    if (this.mode & L.FreeDraw.MODES.CREATE) {
+                    if (this.mode & FreeDraw.MODES.CREATE) {
 
                         // Place the user in create polygon mode.
                         this.creating = true;
@@ -1568,7 +1561,7 @@
             if (this.options.createExitMode) {
 
                 // Automatically exit the user from the creation mode.
-                this.setMode(this.mode ^ L.FreeDraw.MODES.CREATE);
+                this.setMode(this.mode ^ FreeDraw.MODES.CREATE);
                 this.setMapPermissions('enable');
 
             }
@@ -1581,7 +1574,7 @@
      * @constant MODES
      * @type {Object}
      */
-    L.FreeDraw.MODES = {
+    FreeDraw.MODES = {
         NONE: 0,
         VIEW: 1,
         CREATE: 2,
@@ -1598,7 +1591,7 @@
      * @param [path=''] {String}
      * @return {void}
      */
-    L.FreeDraw.Throw = function ThrowException(message, path) {
+    FreeDraw.Throw = function ThrowException(message, path) {
 
         if (path) {
 
@@ -1620,4 +1613,7 @@
 
     };
 
-})(window, window.L, window.d3, window.ClipperLib);
+
+    return FreeDraw;
+
+}

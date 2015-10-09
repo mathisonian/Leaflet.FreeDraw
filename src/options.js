@@ -1,329 +1,331 @@
-(function($window, L) {
+"use strict";
 
-    "use strict";
+/**
+ * @module FreeDraw
+ * @submodule Options
+ * @author Adam Timberlake
+ * @link https://github.com/Wildhoney/Leaflet.FreeDraw
+ * @constructor
+ */
+var Options = function FreeDrawOptions() {};
+
+/**
+ * @property prototype
+ * @type {Object}
+ */
+Options.prototype = {
 
     /**
-     * @module FreeDraw
-     * @submodule Options
-     * @author Adam Timberlake
-     * @link https://github.com/Wildhoney/Leaflet.FreeDraw
-     * @constructor
+     * @property multiplePolygons
+     * @type {Boolean}
      */
-    L.FreeDraw.Options = function FreeDrawOptions() {};
+    multiplePolygons: true,
 
     /**
-     * @property prototype
+     * @property events
+     * @type {Array}
+     */
+    events: [],
+
+    /**
+     * @property simplifyPolygon
+     * @type {Boolean}
+     */
+    simplifyPolygon: true,
+
+    /**
+     * @property invalidLength
+     * @type {Boolean}
+     */
+    invalidLength: 3,
+
+    /**
+     * @property hullAlgorithm
+     * @type {String|Boolean}
+     */
+    hullAlgorithm: 'wildhoneyConcaveHull',
+
+    /**
+     * @property boundariesAfterEdit
+     * @type {Boolean}
+     */
+    boundariesAfterEdit: false,
+
+    /**
+     * @property createExitMode
+     * @type {Boolean}
+     */
+    createExitMode: true,
+
+    /**
+     * @property attemptMerge
+     * @type {Boolean}
+     */
+    attemptMerge: true,
+
+    /**
+     * @property smoothFactor
+     * @type {Number}
+     */
+    smoothFactor: 5,
+
+    /**
+     * @property iconClassName
+     * @type {String}
+     */
+    iconClassName: 'polygon-elbow',
+
+    /**
+     * @property svgClassName
+     * @type {String}
+     */
+    svgClassName: 'tracer',
+
+    /**
+     * @property polygonClassName
+     * @type {String}
+     */
+    polygonClassName: 'tracer',
+
+    /**
+     * @property deleteExitMode
+     * @type {Boolean}
+     */
+    deleteExitMode: false,
+
+    /**
+     * @property memoriseEachEdge
+     * @type {Boolean}
+     */
+    memoriseEachEdge: true,
+
+    /**
+     * @property destroyPrevious
+     * @type {Boolean}
+     */
+    destroyPrevious: false,
+
+    /**
+     * @property disablePropagation
+     * @type {Boolean}
+     */
+    disablePropagation: false,
+
+    /**
+     * @property elbowDistance
+     * @type {Number}
+     */
+    elbowDistance: 10,
+
+    /**
+     * @property onlyInDistance
+     * @type {Boolean}
+     */
+    onlyInDistance: false,
+
+    /**
+     * @property hullAlgorithms
      * @type {Object}
      */
-    L.FreeDraw.Options.prototype = {
+    hullAlgorithms: {
 
         /**
-         * @property multiplePolygons
-         * @type {Boolean}
-         */
-        multiplePolygons: true,
-
-        /**
-         * @property events
-         * @type {Array}
-         */
-        events: [],
-
-        /**
-         * @property simplifyPolygon
-         * @type {Boolean}
-         */
-        simplifyPolygon: true,
-
-        /**
-         * @property invalidLength
-         * @type {Boolean}
-         */
-        invalidLength: 3,
-
-        /**
-         * @property hullAlgorithm
-         * @type {String|Boolean}
-         */
-        hullAlgorithm: 'wildhoneyConcaveHull',
-
-        /**
-         * @property boundariesAfterEdit
-         * @type {Boolean}
-         */
-        boundariesAfterEdit: false,
-
-        /**
-         * @property createExitMode
-         * @type {Boolean}
-         */
-        createExitMode: true,
-
-        /**
-         * @property attemptMerge
-         * @type {Boolean}
-         */
-        attemptMerge: true,
-
-        /**
-         * @property smoothFactor
-         * @type {Number}
-         */
-        smoothFactor: 5,
-
-        /**
-         * @property iconClassName
-         * @type {String}
-         */
-        iconClassName: 'polygon-elbow',
-
-        /**
-         * @property svgClassName
-         * @type {String}
-         */
-        svgClassName: 'tracer',
-
-        /**
-         * @property polygonClassName
-         * @type {String}
-         */
-        polygonClassName: 'tracer',
-
-        /**
-         * @property deleteExitMode
-         * @type {Boolean}
-         */
-        deleteExitMode: false,
-
-        /**
-         * @property memoriseEachEdge
-         * @type {Boolean}
-         */
-        memoriseEachEdge: true,
-
-        /**
-         * @property destroyPrevious
-         * @type {Boolean}
-         */
-        destroyPrevious: false,
-
-        /**
-         * @property disablePropagation
-         * @type {Boolean}
-         */
-        disablePropagation: false,
-
-        /**
-         * @property elbowDistance
-         * @type {Number}
-         */
-        elbowDistance: 10,
-
-        /**
-         * @property onlyInDistance
-         * @type {Boolean}
-         */
-        onlyInDistance: false,
-
-        /**
-         * @property hullAlgorithms
+         * @property brian3kb/graham_scan_js
          * @type {Object}
          */
-        hullAlgorithms: {
-
-            /**
-             * @property brian3kb/graham_scan_js
-             * @type {Object}
-             */
-            'brian3kb/graham_scan_js': {
-                method: 'brian3kbGrahamScan',
-                name: 'Graham Scan JS',
-                global: 'ConvexHullGrahamScan',
-                link: 'https://github.com/brian3kb/graham_scan_js'
-            },
-
-            /**
-             * @property Wildhoney/ConcaveHull
-             * @type {Object}
-             */
-            'Wildhoney/ConcaveHull': {
-                method: 'wildhoneyConcaveHull',
-                name: 'Concave Hull',
-                global: 'ConcaveHull',
-                link: 'https://github.com/Wildhoney/ConcaveHull'
-            }
-
+        'brian3kb/graham_scan_js': {
+            method: 'brian3kbGrahamScan',
+            name: 'Graham Scan JS',
+            global: 'ConvexHullGrahamScan',
+            link: 'https://github.com/brian3kb/graham_scan_js'
         },
 
         /**
-         * @method setEvents
-         * @param {Array} eventMap
-         * @return {void}
+         * @property Wildhoney/ConcaveHull
+         * @type {Object}
          */
-        setEvents: function setEvents(eventMap) {
-            this.events = eventMap;
-        },
+        'Wildhoney/ConcaveHull': {
+            method: 'wildhoneyConcaveHull',
+            name: 'Concave Hull',
+            global: 'ConcaveHull',
+            link: 'https://github.com/Wildhoney/ConcaveHull'
+        }
 
-        /**
-         * @method setMemoriseEachEdge
-         * @param value {Boolean}
-         * @return {void}
-         */
-        setMemoriseEachEdge: function setMemoriseEachEdge(value) {
-            this.memoriseEachEdge = !!value;
-        },
+    },
 
-        /**
-         * @method addElbowOnlyWithinDistance
-         * @param value {Boolean}
-         */
-        addElbowOnlyWithinDistance: function addElbowOnlyWithinDistance(value) {
-            this.onlyInDistance = !!value;
-        },
+    /**
+     * @method setEvents
+     * @param {Array} eventMap
+     * @return {void}
+     */
+    setEvents: function setEvents(eventMap) {
+        this.events = eventMap;
+    },
 
-        /**
-         * @method setPathClipperPadding
-         * @param value {Number}
-         * @return {void}
-         */
-        setPathClipperPadding: function setPathClipperPadding(value) {
+    /**
+     * @method setMemoriseEachEdge
+     * @param value {Boolean}
+     * @return {void}
+     */
+    setMemoriseEachEdge: function setMemoriseEachEdge(value) {
+        this.memoriseEachEdge = !!value;
+    },
 
-            // Prevent polygons outside of the viewport from being clipped.
-            L.Path.CLIP_PADDING = value;
+    /**
+     * @method addElbowOnlyWithinDistance
+     * @param value {Boolean}
+     */
+    addElbowOnlyWithinDistance: function addElbowOnlyWithinDistance(value) {
+        this.onlyInDistance = !!value;
+    },
 
-        },
+    /**
+     * @method setPathClipperPadding
+     * @param value {Number}
+     * @return {void}
+     */
+    setPathClipperPadding: function setPathClipperPadding(value) {
 
-        /**
-         * @method disableStopPropagation
-         * @return {void}
-         */
-        disableStopPropagation: function disableStopPropagation() {
-            this.disablePropagation = true;
-        },
+        // Prevent polygons outside of the viewport from being clipped.
+        L.Path.CLIP_PADDING = value;
 
-        /**
-         * @method setMaximumDistanceForElbow
-         * @param maxDistance {Number}
-         * @return {void}
-         */
-        setMaximumDistanceForElbow: function setMaximumDistanceForElbow(maxDistance) {
-            this.elbowDistance = +maxDistance;
-        },
+    },
 
-        /**
-         * @method exitModeAfterCreate
-         * @param value {Boolean}
-         * @return {void}
-         */
-        exitModeAfterCreate: function exitModeAfterCreate(value) {
-            this.createExitMode = !!value;
-        },
+    /**
+     * @method disableStopPropagation
+     * @return {void}
+     */
+    disableStopPropagation: function disableStopPropagation() {
+        this.disablePropagation = true;
+    },
 
-        /**
-         * @method exitModeAfterDelete
-         * @param value {Boolean}
-         * @return {void}
-         */
-        exitModeAfterDelete: function exitModeAfterDelete(value) {
-            this.deleteExitMode = !!value;
-        },
+    /**
+     * @method setMaximumDistanceForElbow
+     * @param maxDistance {Number}
+     * @return {void}
+     */
+    setMaximumDistanceForElbow: function setMaximumDistanceForElbow(maxDistance) {
+        this.elbowDistance = +maxDistance;
+    },
 
-        /**
-         * @method destroyPreviousPolygon
-         * @param value {Boolean}
-         * @return {void}
-         */
-        destroyPreviousPolygon: function destroyPreviousPolygon(value) {
-            this.destroyPrevious = !!value;
-        },
+    /**
+     * @method exitModeAfterCreate
+     * @param value {Boolean}
+     * @return {void}
+     */
+    exitModeAfterCreate: function exitModeAfterCreate(value) {
+        this.createExitMode = !!value;
+    },
 
-        /**
-         * @method allowMultiplePolygons
-         * @param allow {Boolean}
-         * @return {void}
-         */
-        allowMultiplePolygons: function allowMultiplePolygons(allow) {
-            this.multiplePolygons = !!allow;
-        },
+    /**
+     * @method exitModeAfterDelete
+     * @param value {Boolean}
+     * @return {void}
+     */
+    exitModeAfterDelete: function exitModeAfterDelete(value) {
+        this.deleteExitMode = !!value;
+    },
 
-        /**
-         * @method setSVGClassName
-         * @param className {String}
-         * @return {void}
-         */
-        setSVGClassName: function setSVGClassName(className) {
-            this.svgClassName = className;
-        },
+    /**
+     * @method destroyPreviousPolygon
+     * @param value {Boolean}
+     * @return {void}
+     */
+    destroyPreviousPolygon: function destroyPreviousPolygon(value) {
+        this.destroyPrevious = !!value;
+    },
 
-        /**
-         * @method setBoundariesAfterEdit
-         * @param value {Boolean}
-         * @return {void}
-         */
-        setBoundariesAfterEdit: function setBoundariesAfterEdit(value) {
-            this.boundariesAfterEdit = !!value;
-        },
+    /**
+     * @method allowMultiplePolygons
+     * @param allow {Boolean}
+     * @return {void}
+     */
+    allowMultiplePolygons: function allowMultiplePolygons(allow) {
+        this.multiplePolygons = !!allow;
+    },
 
-        /**
-         * @method smoothFactor
-         * @param factor {Number}
-         * @return {void}
-         */
-        setSmoothFactor: function setSmoothFactor(factor) {
-            this.smoothFactor = +factor;
-        },
+    /**
+     * @method setSVGClassName
+     * @param className {String}
+     * @return {void}
+     */
+    setSVGClassName: function setSVGClassName(className) {
+        this.svgClassName = className;
+    },
 
-        /**
-         * @method setIconClassName
-         * @param className {String}
-         * @return {void}
-         */
-        setIconClassName: function setIconClassName(className) {
-            this.iconClassName = className;
-        },
+    /**
+     * @method setBoundariesAfterEdit
+     * @param value {Boolean}
+     * @return {void}
+     */
+    setBoundariesAfterEdit: function setBoundariesAfterEdit(value) {
+        this.boundariesAfterEdit = !!value;
+    },
 
-        /**
-         * @method setPolygonClassName
-         * @param className {String}
-         * @return {void}
-         */
-        setPolygonClassName: function setPolygonClassName(className) {
-            this.polygonClassName = className;
-        },
+    /**
+     * @method smoothFactor
+     * @param factor {Number}
+     * @return {void}
+     */
+    setSmoothFactor: function setSmoothFactor(factor) {
+        this.smoothFactor = +factor;
+    },
 
-        /**
-         * @method setHullAlgorithm
-         * @param algorithm {String|Boolean}
-         * @return {void}
-         */
-        setHullAlgorithm: function setHullAlgorithm(algorithm) {
+    /**
+     * @method setIconClassName
+     * @param className {String}
+     * @return {void}
+     */
+    setIconClassName: function setIconClassName(className) {
+        this.iconClassName = className;
+    },
 
-            if (algorithm && !this.hullAlgorithms.hasOwnProperty(algorithm)) {
+    /**
+     * @method setPolygonClassName
+     * @param className {String}
+     * @return {void}
+     */
+    setPolygonClassName: function setPolygonClassName(className) {
+        this.polygonClassName = className;
+    },
 
-                // Ensure the passed algorithm is valid.
-                return;
+    /**
+     * @method setHullAlgorithm
+     * @param algorithm {String|Boolean}
+     * @return {void}
+     */
+    setHullAlgorithm: function setHullAlgorithm(algorithm) {
 
-            }
+        // TODO - update the checks here
 
-            if (!algorithm) {
-                this.hullAlgorithm = false;
-                return;
-            }
+        if (algorithm && !this.hullAlgorithms.hasOwnProperty(algorithm)) {
 
-            // Resolve the hull algorithm.
-            algorithm = this.hullAlgorithms[algorithm];
-
-            if (typeof $window[algorithm.global] === 'undefined') {
-
-                // Ensure hull algorithm module has been included.
-                L.FreeDraw.Throw(algorithm.name + ' is a required library for concave/convex hulls', algorithm.link);
-
-            }
-
-            this.hullAlgorithm = algorithm.method;
+            // Ensure the passed algorithm is valid.
+            return;
 
         }
 
-    };
+        if (!algorithm) {
+            this.hullAlgorithm = false;
+            return;
+        }
 
-})(window, window.L);
+        // Resolve the hull algorithm.
+        algorithm = this.hullAlgorithms[algorithm];
+
+        if (typeof $window[algorithm.global] === 'undefined') {
+
+            // Ensure hull algorithm module has been included.
+            // TODO - fix this
+            L.FreeDraw.Throw(algorithm.name + ' is a required library for concave/convex hulls', algorithm.link);
+
+        }
+
+        this.hullAlgorithm = algorithm.method;
+
+    }
+
+};
+
+module.exports = Options;
+

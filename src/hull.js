@@ -1,6 +1,9 @@
-(function() {
+"use strict";
 
-    "use strict";
+var ConcaveHull = require('concavehull');
+var ConvexHullGrahamScan = require('graham_scan');
+
+module.exports = function(L) {
 
     /**
      * @module FreeDraw
@@ -9,13 +12,13 @@
      * @link https://github.com/Wildhoney/Leaflet.FreeDraw
      * @constructor
      */
-    L.FreeDraw.Hull = function FreeDrawHull() {};
+    var Hull = function FreeDrawHull() {};
 
     /**
      * @property prototype
      * @type {Object}
      */
-    L.FreeDraw.Hull.prototype = {
+    Hull.prototype = {
 
         /**
          * @property map
@@ -84,6 +87,7 @@
             return new ConcaveHull(latLngs).getLatLngs();
         }
 
-    }
+    };
 
-}());
+    return Hull;
+}
